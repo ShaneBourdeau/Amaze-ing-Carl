@@ -41,11 +41,9 @@ class LineDetect:
     	self.dyn_client = Client("LineDetect", timeout=60)
     	self.scale = 1000.0
     	self.FollowLinePID = (30.0, 0.0, 60.0)
-    	self.linear = 0.08 # 速度太快会导致机器人在移动的过程中看不到障碍物
+    	self.linear = 0.08
     	self.PID_init()
     	self.joints_init = [90, 120, 0, 0, 90, 30]
-    	#for i in range(4):
-    	#for i in range(2):
     	#	self.color.color_hsv_list[self.color_name_list[i]] = self.hsv_yaml.read_hsv(self.color_name_list[i])
     	cv.namedWindow(self.windows_name, cv.WINDOW_AUTOSIZE)
     	cv.setMouseCallback(self.windows_name, self.onMouse, 0)
@@ -142,7 +140,6 @@ class LineDetect:
     	if self.ros_ctrl.Buzzer_state == True: self.ros_ctrl.pubBuzzer(False)
     	if abs(point_x - 320) < 40: point_x = 320 #10
     	if abs(point_y - 400) < 40: point_y = 400
-    	#这里开始下爪抓取
     	if abs(point_x - 320) < 10 and abs(point_y - 400) < 10: #10 20
         	#sleep(0.3)
         	if self.ros_ctrl.RobotRun_status == True: self.ros_ctrl.pubVel(0, 0)
@@ -376,8 +373,6 @@ class LineDetect:
    	 
 	def handle_intersection(self, intersection_type):
     	rospy.loginfo(f"Handling intersection: {intersection_type}")
-	#Maybe instead of a pq, use a stack and after it places the block and does a 180, retreive the head and
-    	# Define prioritized paths for different runs
     	available_paths = {
         	0: ["Straight", "Left", "Right"],  # First run priority
         	1: ["Left", "Right", "Straight"],  # Second run priority
